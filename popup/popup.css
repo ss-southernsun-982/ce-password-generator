@@ -1,9 +1,11 @@
+/* ===== PHONG CÁCH TỔNG THỂ ===== */
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   width: 320px;
   padding: 0;
   margin: 0;
-  background-color: #f4f4f9;
+  background-color: #f7f9fc;
+  color: #333;
 }
 
 .container {
@@ -12,44 +14,54 @@ body {
 
 h1 {
   text-align: center;
-  color: #333;
+  color: #1a2b4d;
   margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: 600;
 }
 
+/* ===== KHUNG HIỂN THỊ KẾT QUẢ ===== */
 .result-container {
   display: flex;
   margin-bottom: 20px;
+  border: 1px solid #e0e6ed;
+  border-radius: 8px;
+  overflow: hidden;
+  /* Đảm bảo các góc được bo tròn */
 }
 
 #passwordResult {
   flex-grow: 1;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px 0 0 4px;
-  font-size: 16px;
-  background-color: #fff;
+  padding: 12px;
+  border: none;
+  font-size: 14px;
+  background-color: #ffffff;
+  color: #4a5568;
+  outline: none;
+  /* Bỏ viền xanh khi focus */
 }
 
 #copyBtn {
-  padding: 10px;
-  border: 1px solid #007bff;
-  background-color: #007bff;
+  padding: 12px 16px;
+  border: none;
+  background-color: #03AED2;
   color: white;
   cursor: pointer;
-  border-radius: 0 4px 4px 0;
-  transition: background-color 0.2s;
+  font-weight: 600;
+  transition: background-color 0.2s ease-in-out;
 }
 
 #copyBtn:hover {
-  background-color: #0056b3;
+  background-color: #2FA4D7;
 }
 
+/* ===== CÁC TÙY CHỌN ===== */
 .options {
   margin-bottom: 20px;
 }
 
 .option {
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -57,43 +69,122 @@ h1 {
 
 .option label {
   font-size: 14px;
-  color: #555;
+  color: #4a5568;
+  cursor: pointer;
+  user-select: none;
+  /* Ngăn chọn text khi click vào label */
 }
 
 #length {
   width: 60px;
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 6px 8px;
+  border: 1px solid #e0e6ed;
+  border-radius: 6px;
   text-align: center;
+  font-size: 14px;
+  background-color: #fff;
+  outline: none;
 }
 
 .option-group {
-  border-top: 1px solid #ddd;
-  padding-top: 10px;
+  border-top: 1px solid #e0e6ed;
+  padding-top: 15px;
+  margin-top: 15px;
 }
 
 .option-group .option {
   justify-content: flex-start;
+  margin-bottom: 15px;
+  /* Tăng khoảng cách cho dễ nhìn */
 }
 
+/* ===== THIẾT KẾ HIỆN ĐẠI CHO CHECKBOX ===== */
+/* Ẩn checkbox mặc định */
 .option-group input[type="checkbox"] {
-  margin-right: 10px;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
 }
 
+/* Tạo một container cho checkbox tùy chỉnh */
+.option-group .option {
+  position: relative;
+  padding-left: 35px;
+  /* Dành không gian cho checkbox */
+}
+
+/* Tạo phần tử checkbox tùy chỉnh */
+.option-group .option label::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 20px;
+  width: 20px;
+  background-color: #ffffff;
+  border: 2px solid #cbd5e0;
+  border-radius: 4px;
+  /* Bo góc nhẹ */
+  transition: all 0.2s ease-in-out;
+}
+
+/* Tạo dấu check (dấu tick) */
+.option-group .option label::after {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 50%;
+  transform: translateY(-60%) rotate(45deg);
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  opacity: 0;
+  /* Ẩn dấu tick đi */
+  transition: opacity 0.1s ease-in-out;
+}
+
+/* Hiệu ứng khi di chuột vào */
+.option-group .option:hover label::before {
+  border-color: #a0aec0;
+  background-color: #edf2f7;
+}
+
+/* Khi checkbox được chọn (checked) */
+.option-group input[type="checkbox"]:checked+label::before {
+  background-color: #237227;
+  /* Màu xanh lá cây */
+  border-color: #237227;
+}
+
+/* Hiển thị dấu tick khi được chọn */
+.option-group input[type="checkbox"]:checked+label::after {
+  opacity: 1;
+}
+
+/* ===== NÚT TẠO MẬT KHẨU ===== */
 #generateBtn {
   width: 100%;
-  padding: 12px;
+  padding: 14px;
   border: none;
-  background-color: #28a745;
+  background-color: #F45B26;
   color: white;
   font-size: 16px;
-  font-weight: bold;
-  border-radius: 4px;
+  font-weight: 600;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 #generateBtn:hover {
-  background-color: #218838;
+  background-color: #E76F2E;
+}
+
+#generateBtn:active {
+  transform: scale(0.98);
+  /* Hiệu ứng nhấn xuống */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
