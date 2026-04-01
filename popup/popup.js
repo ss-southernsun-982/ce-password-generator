@@ -14,7 +14,28 @@ const lowerCaseChars = "abcdefghijklmnopqrstuvwxyz";
 const numberChars = "0123456789";
 const symbolChars = "!@#$%^&*()_+-=[]{}|;:,.<>?";
 
-// --- HÀM MỚI: Lưu các tùy chọn ---
+// --- HÀM MỚI: TẠO HIỆU ỨNG PHÁO HOA ---
+function showFirework() {
+  // confetti() là hàm toàn cục từ thư viện chúng ta đã thêm
+  confetti({
+    particleCount: 100, // Số lượng particle
+    spread: 70, // Độ lan rộng
+    origin: { y: 0.6 }, // Vị trí bắt đầu (0.6 là từ gần giữa dưới lên)
+  });
+}
+
+// --- HÀM MỚI: TẠO HIỆU ỨNG SAO RƠI (cho nút Copy) ---
+function showStarBurst() {
+  confetti({
+    particleCount: 50,
+    angle: 90, // Bắn thẳng lên
+    spread: 55,
+    origin: { x: 0.5, y: 0.8 }, // Bắt đầu từ dưới cùng, giữa màn hình
+    colors: ["#bb0000", "#ffffff"], // Màu đỏ và trắng
+  });
+}
+
+// Hàm lưu các tùy chọn
 function saveOptions() {
   const options = {
     length: lengthEl.value,
@@ -23,15 +44,13 @@ function saveOptions() {
     numbers: numbersEl.checked,
     symbols: symbolsEl.checked,
   };
-  // Sử dụng chrome.storage.local để lưu dữ liệu
   chrome.storage.local.set({ passwordGeneratorOptions: options }, () => {
     console.log("Options saved");
   });
 }
 
-// --- HÀM MỚI: Tải các tùy chọn đã lưu ---
+// Hàm tải các tùy chọn đã lưu
 function loadOptions() {
-  // Lấy dữ liệu từ chrome.storage.local
   chrome.storage.local.get(["passwordGeneratorOptions"], (result) => {
     if (result.passwordGeneratorOptions) {
       const options = result.passwordGeneratorOptions;
@@ -41,12 +60,11 @@ function loadOptions() {
       numbersEl.checked = options.numbers;
       symbolsEl.checked = options.symbols;
     }
-    // Sau khi đã tải xong các tùy chọn, tạo mật khẩu đầu tiên
     generatePassword();
   });
 }
 
-// Hàm tạo mật khẩu (không thay đổi)
+// Hàm tạo mật khẩu
 function generatePassword() {
   let length = lengthEl.value;
   let allowedChars = "";
@@ -78,7 +96,7 @@ function generatePassword() {
   passwordResult.value = password;
 }
 
-// Hàm sao chép mật khẩu (không thay đổi)
+// Hàm sao chép mật khẩu
 async function copyPassword() {
   if (!passwordResult.value) {
     alert("Không có mật khẩu để sao chép!");
@@ -88,6 +106,8 @@ async function copyPassword() {
   try {
     await navigator.clipboard.writeText(passwordResult.value);
     copyBtn.textContent = "Copied!";
+    // GỌI HIỆU ỨNG SAO RƠI KHI SAO CHÉP THÀNH CÔNG
+    showStarBurst();
     setTimeout(() => {
       copyBtn.textContent = "Copy";
     }, 2000);
@@ -102,19 +122,18 @@ async function copyPassword() {
 // Gán sự kiện cho nút "Generate"
 generateBtn.addEventListener("click", () => {
   generatePassword();
-  // Mỗi khi tạo mật khẩu mới, cũng lưu lại các tùy chọn hiện tại
   saveOptions();
+  // GỌI HIỆU ỨNG PHÁO HOA KHI TẠO MẬT KHẨU
+  showFirework();
 });
 
 // Gán sự kiện cho nút "Copy"
 copyBtn.addEventListener("click", copyPassword);
 
-// --- THAY ĐỔI QUAN TRỌNG ---
-// Thay vì gọi generatePassword() trực tiếp, chúng ta gọi loadOptions()
-// loadOptions() sẽ tải các cài đặt đã lưu, sau đó mới gọi generatePassword()
+// Tải các tùy chọn khi popup mở
 document.addEventListener("DOMContentLoaded", loadOptions);
 
-// Thêm sự kiện 'change' cho tất cả các ô tùy chọn để lưu ngay lập tức
+// Lưu tùy chọn khi có thay đổi
 [lengthEl, uppercaseEl, lowercaseEl, numbersEl, symbolsEl].forEach(
   (element) => {
     element.addEventListener("change", saveOptions);
