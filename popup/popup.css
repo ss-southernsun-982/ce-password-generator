@@ -1,0 +1,99 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  width: 320px;
+  padding: 0;
+  margin: 0;
+  background-color: #f4f4f9;
+}
+
+.container {
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.result-container {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+#passwordResult {
+  flex-grow: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px 0 0 4px;
+  font-size: 16px;
+  background-color: #fff;
+}
+
+#copyBtn {
+  padding: 10px;
+  border: 1px solid #007bff;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  border-radius: 0 4px 4px 0;
+  transition: background-color 0.2s;
+}
+
+#copyBtn:hover {
+  background-color: #0056b3;
+}
+
+.options {
+  margin-bottom: 20px;
+}
+
+.option {
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.option label {
+  font-size: 14px;
+  color: #555;
+}
+
+#length {
+  width: 60px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.option-group {
+  border-top: 1px solid #ddd;
+  padding-top: 10px;
+}
+
+.option-group .option {
+  justify-content: flex-start;
+}
+
+.option-group input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+#generateBtn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  background-color: #28a745;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+#generateBtn:hover {
+  background-color: #218838;
+}

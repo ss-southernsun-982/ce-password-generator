@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "Password Generator Pro",
+  "version": "1.0",
+  "description": "Tạo mật khẩu ngẫu nhiên an toàn với các tùy chọn tùy chỉnh.",
+  "permissions": [
+    "activeTab",
+    "scripting"
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
