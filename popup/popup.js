@@ -14,7 +14,39 @@ const lowerCaseChars = "abcdefghijklmnopqrstuvwxyz";
 const numberChars = "0123456789";
 const symbolChars = "!@#$%^&*()_+-=[]{}|;:,.<>?";
 
-// Hàm tạo mật khẩu
+// --- HÀM MỚI: Lưu các tùy chọn ---
+function saveOptions() {
+  const options = {
+    length: lengthEl.value,
+    uppercase: uppercaseEl.checked,
+    lowercase: lowercaseEl.checked,
+    numbers: numbersEl.checked,
+    symbols: symbolsEl.checked,
+  };
+  // Sử dụng chrome.storage.local để lưu dữ liệu
+  chrome.storage.local.set({ passwordGeneratorOptions: options }, () => {
+    console.log("Options saved");
+  });
+}
+
+// --- HÀM MỚI: Tải các tùy chọn đã lưu ---
+function loadOptions() {
+  // Lấy dữ liệu từ chrome.storage.local
+  chrome.storage.local.get(["passwordGeneratorOptions"], (result) => {
+    if (result.passwordGeneratorOptions) {
+      const options = result.passwordGeneratorOptions;
+      lengthEl.value = options.length;
+      uppercaseEl.checked = options.uppercase;
+      lowercaseEl.checked = options.lowercase;
+      numbersEl.checked = options.numbers;
+      symbolsEl.checked = options.symbols;
+    }
+    // Sau khi đã tải xong các tùy chọn, tạo mật khẩu đầu tiên
+    generatePassword();
+  });
+}
+
+// Hàm tạo mật khẩu (không thay đổi)
 function generatePassword() {
   let length = lengthEl.value;
   let allowedChars = "";
@@ -33,7 +65,6 @@ function generatePassword() {
     allowedChars += symbolChars;
   }
 
-  // Kiểm tra xem người dùng đã chọn ít nhất một tùy chọn chưa
   if (allowedChars.length === 0) {
     alert("Vui lòng chọn ít nhất một loại ký tự!");
     return;
@@ -47,7 +78,7 @@ function generatePassword() {
   passwordResult.value = password;
 }
 
-// Hàm sao chép mật khẩu
+// Hàm sao chép mật khẩu (không thay đổi)
 async function copyPassword() {
   if (!passwordResult.value) {
     alert("Không có mật khẩu để sao chép!");
@@ -66,9 +97,26 @@ async function copyPassword() {
   }
 }
 
-// Gán sự kiện cho các nút
-generateBtn.addEventListener("click", generatePassword);
+// --- CẬP NHẬT EVENT LISTENERS ---
+
+// Gán sự kiện cho nút "Generate"
+generateBtn.addEventListener("click", () => {
+  generatePassword();
+  // Mỗi khi tạo mật khẩu mới, cũng lưu lại các tùy chọn hiện tại
+  saveOptions();
+});
+
+// Gán sự kiện cho nút "Copy"
 copyBtn.addEventListener("click", copyPassword);
 
-// Tự động tạo mật khẩu khi popup được mở
-document.addEventListener("DOMContentLoaded", generatePassword);
+// --- THAY ĐỔI QUAN TRỌNG ---
+// Thay vì gọi generatePassword() trực tiếp, chúng ta gọi loadOptions()
+// loadOptions() sẽ tải các cài đặt đã lưu, sau đó mới gọi generatePassword()
+document.addEventListener("DOMContentLoaded", loadOptions);
+
+// Thêm sự kiện 'change' cho tất cả các ô tùy chọn để lưu ngay lập tức
+[lengthEl, uppercaseEl, lowercaseEl, numbersEl, symbolsEl].forEach(
+  (element) => {
+    element.addEventListener("change", saveOptions);
+  },
+);

@@ -5,7 +5,8 @@
   "description": "Tạo mật khẩu ngẫu nhiên an toàn với các tùy chọn tùy chỉnh.",
   "permissions": [
     "activeTab",
-    "scripting"
+    "scripting",
+    "storage"
   ],
   "action": {
     "default_popup": "popup/popup.html",
