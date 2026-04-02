@@ -1,0 +1,54 @@
+/* popup/input.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Các style tùy chỉnh mà Tailwind không có */
+@layer components {
+  .custom-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    background: #d6e3ff;
+    /* Sử dụng màu primary-fixed */
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .custom-slider::-webkit-slider-thumb:hover {
+    background: #a9c7ff;
+    /* Sử dụng màu primary */
+  }
+}
+
+/* Fix popup width and height */
+body {
+  width: 380px;
+  max-height: 600px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Hide scrollbar */
+body::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+main {
+  overflow: visible;
+  /* Thêm dòng này nếu nó bị ẩn */
+}
+
+/* Đảm bảo container của các tùy chọn cũng không cắt nội dung */
+.options-container {
+  /* Thay bằng class hoặc id thực tế của bạn */
+  overflow: visible;
+  /* Thêm dòng này nếu nó bị ẩn */
+}

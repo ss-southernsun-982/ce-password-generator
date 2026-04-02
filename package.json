@@ -1,0 +1,23 @@
+{
+  "name": "password-generator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build-css": "tailwindcss -i ./popup/input.css -o ./popup/popup.css --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ss-southernsun-982/ce-password-generator.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ss-southernsun-982/ce-password-generator/issues"
+  },
+  "homepage": "https://github.com/ss-southernsun-982/ce-password-generator#readme",
+  "devDependencies": {
+    "tailwindcss": "^3.4.19"
+  }
+}

@@ -1,52 +1,286 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 
 <head>
-  <title>Password Generator</title>
-  <link rel="stylesheet" href="popup.css">
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Password Generator Pro | FORTIFIED</title>
+
+  <!-- Liên kết đến file CSS đã được build và font -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+    rel="stylesheet" />
+  <link href="popup.css" rel="stylesheet" />
+
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    /* ===== SECURITY RATING STYLES ===== */
+    #ratingBars .bar {
+      transition: background-color 0.4s ease-in-out, transform 0.2s ease;
+      height: 100%;
+      /* Đảm bảo thanh lấp đầy chiều cao của container */
+    }
+
+    #ratingBars .bar.active {
+      transform: scaleY(1.2);
+      /* Làm thanh hơi to lên khi active */
+    }
+
+    /* Định nghĩa màu sắc cho các mức độ - CẬP NHẬT ĐỂ PHÙ HỢP VỚI JS */
+    .rating-weak {
+      color: var(--md-sys-color-error);
+    }
+
+    .rating-fair {
+      color: var(--md-sys-color-tertiary);
+    }
+
+    .rating-good {
+      color: var(--md-sys-color-secondary);
+    }
+
+    .rating-strong {
+      color: var(--md-sys-color-secondary);
+    }
+
+    .rating-very-strong {
+      color: var(--md-sys-color-primary);
+    }
+  </style>
 </head>
 
-<body>
-  <div class="container">
-    <h1>Password Generator</h1>
-
-    <div class="result-container">
-      <input type="text" id="passwordResult" readonly placeholder="Your password">
-      <button id="copyBtn">Copy</button>
+<body class="bg-surface text-on-surface font-body selection:bg-primary/30 min-h-screen flex flex-col">
+  <!-- Header (TopAppBar) -->
+  <header class="bg-surface flex justify-between items-center px-6 h-16 w-full fixed top-0 z-50">
+    <div class="flex items-center gap-3">
+      <span class="material-symbols-outlined text-primary text-2xl">shield_lock</span>
+      <h1 class="font-headline text-lg font-bold tracking-tight text-primary">FORTIFIED</h1>
     </div>
+    <div class="flex items-center gap-4">
+      <button
+        class="text-on-surface hover:bg-surface-container-high transition-colors duration-200 p-2 rounded-lg active:scale-95"
+        aria-label="History">
+        <span class="material-symbols-outlined">history</span>
+      </button>
+      <button
+        class="text-on-surface hover:bg-surface-container-high transition-colors duration-200 p-2 rounded-lg active:scale-95"
+        aria-label="Settings">
+        <span class="material-symbols-outlined">settings</span>
+      </button>
+    </div>
+  </header>
 
-    <div class="options">
-      <div class="option">
-        <label for="length">Password Length</label>
-        <input type="number" id="length" value="16" min="4" max="64">
+  <!-- Main Canvas -->
+  <main class="flex-1 mt-16 px-6 py-8 max-w-md mx-auto w-full space-y-10">
+    <!-- Hero: Password Display -->
+    <section class="space-y-4">
+      <div class="bg-surface-container-highest rounded-xl p-6 shadow-2xl relative overflow-hidden group">
+        <div class="absolute inset-0 bg-gradient-to-tr from-primary/5 to-transparent opacity-50"></div>
+        <div class="relative flex items-center justify-between gap-4">
+          <div class="flex-1 overflow-hidden">
+            <input type="text" id="passwordResult" readonly
+              class="font-headline text-2xl text-primary font-bold tracking-tight block truncate bg-transparent border-none outline-none w-full"
+              value="Nhấn Generate để tạo mật khẩu" aria-label="Generated password" />
+            <span class="text-xs uppercase tracking-widest text-on-surface-variant font-bold mt-2 block">
+              SECURE STRING GENERATED
+            </span>
+          </div>
+          <div class="flex flex-col gap-2">
+            <button id="copyBtn"
+              class="p-3 bg-surface-container-high rounded-lg text-primary hover:bg-surface-bright transition-all active:scale-90 shadow-sm"
+              aria-label="Copy password">
+              <span id="copyIcon" class="material-symbols-outlined text-xl">content_copy</span>
+            </button>
+            <button id="refreshBtn"
+              class="p-3 bg-surface-container-high rounded-lg text-tertiary hover:bg-surface-bright transition-all active:scale-90 shadow-sm"
+              aria-label="Generate new password">
+              <span class="material-symbols-outlined text-xl">refresh</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Security Rating -->
+      <div class="flex flex-col gap-3">
+        <div class="flex items-center justify-between">
+          <span class="font-headline text-xs font-bold uppercase tracking-widest text-on-surface-variant">Security
+            Rating</span>
+          <span id="ratingText" class="font-body text-sm font-bold tracking-tight">
+            <!-- Giá trị mặc định sẽ được JS cập nhật -->
+            <span class="rating-fair">Fair</span>
+          </span>
+        </div>
+        <!-- Thanh tiến độ thay thế cho các icon -->
+        <div id="ratingBars" class="flex gap-1.5 h-1.5">
+          <div class="bar flex-1 bg-surface-container-highest rounded-full"></div>
+          <div class="bar flex-1 bg-surface-container-highest rounded-full"></div>
+          <div class="bar flex-1 bg-surface-container-highest rounded-full"></div>
+          <div class="bar flex-1 bg-surface-container-highest rounded-full"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Configuration Canvas -->
+    <div class="bg-surface-container rounded-xl p-6 space-y-8">
+      <!-- Length Slider -->
+      <div class="space-y-5">
+        <div class="flex justify-between items-center">
+          <label class="text-xs uppercase font-bold tracking-widest text-on-surface-variant" for="length">Password
+            Length</label>
+          <span id="lengthValue"
+            class="bg-surface-container-high px-3 py-1 rounded-md text-primary font-headline text-lg border border-outline-variant/10">16</span>
+        </div>
+        <input id="length"
+          class="w-full h-1.5 bg-surface-container-highest rounded-full appearance-none cursor-pointer custom-slider"
+          max="64" min="8" type="range" value="16" aria-label="Password length" />
       </div>
 
-      <div class="option-group">
-        <div class="option">
-          <input type="checkbox" id="uppercase" checked>
-          <label for="uppercase">Uppercase (A-Z)</label>
-        </div>
-        <div class="option">
-          <input type="checkbox" id="lowercase" checked>
-          <label for="lowercase">Lowercase (a-z)</label>
-        </div>
-        <div class="option">
-          <input type="checkbox" id="numbers" checked>
-          <label for="numbers">Numbers (0-9)</label>
-        </div>
-        <div class="option">
-          <input type="checkbox" id="symbols" checked>
-          <label for="symbols">Symbols (!@#$%^&*)</label>
-        </div>
+      <!-- Options Bento Grid -->
+      <div class="grid grid-cols-2 gap-3">
+        <!-- Option: Uppercase -->
+        <label class="group cursor-pointer">
+          <input id="uppercase" checked class="hidden peer" type="checkbox" aria-label="Include uppercase letters" />
+          <div
+            class="bg-surface-container-low border border-transparent peer-checked:border-primary/20 peer-checked:bg-surface-container-high p-4 rounded-xl transition-all hover:bg-surface-container-high flex flex-col gap-2">
+            <div class="flex items-center justify-between">
+              <span class="material-symbols-outlined text-primary">uppercase</span>
+              <div
+                class="w-4 h-4 rounded-full border-2 border-outline peer-checked:border-primary peer-checked:bg-primary flex items-center justify-center">
+                <div class="w-1.5 h-1.5 bg-surface rounded-full opacity-0 peer-checked:opacity-100 transition-opacity">
+                </div>
+              </div>
+            </div>
+            <div>
+              <p class="text-xs font-bold uppercase tracking-wide text-on-surface">Uppercase</p>
+              <p class="text-xs text-on-surface-variant leading-tight">Include A-Z</p>
+            </div>
+          </div>
+        </label>
+        <!-- Option: Lowercase -->
+        <label class="group cursor-pointer">
+          <input id="lowercase" checked class="hidden peer" type="checkbox" aria-label="Include lowercase letters" />
+          <div
+            class="bg-surface-container-low border border-transparent peer-checked:border-primary/20 peer-checked:bg-surface-container-high p-4 rounded-xl transition-all hover:bg-surface-container-high flex flex-col gap-2">
+            <div class="flex items-center justify-between">
+              <span class="material-symbols-outlined text-primary">lowercase</span>
+              <div
+                class="w-4 h-4 rounded-full border-2 border-outline peer-checked:border-primary peer-checked:bg-primary flex items-center justify-center">
+                <div class="w-1.5 h-1.5 bg-surface rounded-full opacity-0 peer-checked:opacity-100 transition-opacity">
+                </div>
+              </div>
+            </div>
+            <div>
+              <p class="text-xs font-bold uppercase tracking-wide text-on-surface">Lowercase</p>
+              <p class="text-xs text-on-surface-variant leading-tight">Include a-z</p>
+            </div>
+          </div>
+        </label>
+        <!-- Option: Numbers -->
+        <label class="group cursor-pointer">
+          <input id="numbers" checked class="hidden peer" type="checkbox" aria-label="Include numbers" />
+          <div
+            class="bg-surface-container-low border border-transparent peer-checked:border-primary/20 peer-checked:bg-surface-container-high p-4 rounded-xl transition-all hover:bg-surface-container-high flex flex-col gap-2">
+            <div class="flex items-center justify-between">
+              <span class="material-symbols-outlined text-primary">123</span>
+              <div
+                class="w-4 h-4 rounded-full border-2 border-outline peer-checked:border-primary peer-checked:bg-primary flex items-center justify-center">
+                <div class="w-1.5 h-1.5 bg-surface rounded-full opacity-0 peer-checked:opacity-100 transition-opacity">
+                </div>
+              </div>
+            </div>
+            <div>
+              <p class="text-xs font-bold uppercase tracking-wide text-on-surface">Numbers</p>
+              <p class="text-xs text-on-surface-variant leading-tight">Include 0-9</p>
+            </div>
+          </div>
+        </label>
+        <!-- Option: Symbols -->
+        <label class="group cursor-pointer">
+          <input id="symbols" checked class="hidden peer" type="checkbox" aria-label="Include symbols" />
+          <div
+            class="bg-surface-container-low border border-transparent peer-checked:border-primary/20 peer-checked:bg-surface-container-high p-4 rounded-xl transition-all hover:bg-surface-container-high flex flex-col gap-2">
+            <div class="flex items-center justify-between">
+              <span class="material-symbols-outlined text-primary">alternate_email</span>
+              <div
+                class="w-4 h-4 rounded-full border-2 border-outline peer-checked:border-primary peer-checked:bg-primary flex items-center justify-center">
+                <div class="w-1.5 h-1.5 bg-surface rounded-full opacity-0 peer-checked:opacity-100 transition-opacity">
+                </div>
+              </div>
+            </div>
+            <div>
+              <p class="text-xs font-bold uppercase tracking-wide text-on-surface">Symbols</p>
+              <p class="text-xs text-on-surface-variant leading-tight">Include #!@</p>
+            </div>
+          </div>
+        </label>
+      </div>
+
+      <!-- Advanced Toggles -->
+      <div class="space-y-4 pt-4 border-t border-outline-variant/10">
+        <label class="flex items-center justify-between cursor-pointer group">
+          <div class="flex items-center gap-3">
+            <span
+              class="material-symbols-outlined text-on-surface-variant group-hover:text-tertiary transition-colors">visibility_off</span>
+            <span class="text-xs font-bold uppercase tracking-widest">Exclude Similar</span>
+          </div>
+          <div class="relative">
+            <input id="excludeSimilar" class="sr-only peer" type="checkbox" aria-label="Exclude similar characters" />
+            <div class="w-10 h-5 bg-surface-container-highest rounded-full peer-checked:bg-primary transition-colors">
+            </div>
+            <div
+              class="absolute top-0.5 left-0.5 w-4 h-4 bg-on-surface-variant rounded-full transition-transform peer-checked:translate-x-5 peer-checked:bg-surface">
+            </div>
+          </div>
+        </label>
+        <label class="flex items-center justify-between cursor-pointer group">
+          <div class="flex items-center gap-3">
+            <span
+              class="material-symbols-outlined text-on-surface-variant group-hover:text-tertiary transition-colors">copy_all</span>
+            <span class="text-xs font-bold uppercase tracking-widest">No Duplicates</span>
+          </div>
+          <div class="relative">
+            <input id="excludeDuplicates" checked class="sr-only peer" type="checkbox"
+              aria-label="No duplicate characters" />
+            <div class="w-10 h-5 bg-surface-container-highest rounded-full peer-checked:bg-primary transition-colors">
+            </div>
+            <div
+              class="absolute top-0.5 left-0.5 w-4 h-4 bg-on-surface-variant rounded-full transition-transform peer-checked:translate-x-5 peer-checked:bg-surface">
+            </div>
+          </div>
+        </label>
       </div>
     </div>
 
-    <button id="generateBtn">Generate Password</button>
-  </div>
+    <!-- CTA Section -->
+    <div class="pt-4">
+      <button id="generateBtn"
+        class="hidden flex-1 bg-primary text-on-primary px-6 py-3 rounded-lg font-semibold hover:bg-primary-variant transition-all active:scale-95 shadow-lg">
+        <i class="fas fa-key mr-2"></i>
+        Generate Password
+      </button>
+      <p class="text-center text-xs text-on-surface-variant mt-6 uppercase tracking-widest opacity-60">
+        Encrypted via Local Entropy Engine
+      </p>
+    </div>
+  </main>
 
-  <!-- THÊM DÒNG NÀY -->
+  <!-- Footer -->
+  <footer class="bg-surface flex justify-between items-center px-6 py-4 w-full mt-auto">
+    <div class="flex flex-col">
+      <span class="font-body text-xs uppercase tracking-widest text-on-surface-variant">© 2024 VAULT ARCHITECT</span>
+    </div>
+    <div class="flex gap-6">
+      <a class="font-body text-xs uppercase tracking-widest text-on-surface-variant hover:text-on-surface transition-colors opacity-80 hover:opacity-100"
+        href="#">Documentation</a>
+      <a class="font-body text-xs uppercase tracking-widest text-on-surface-variant hover:text-on-surface transition-colors opacity-80 hover:opacity-100"
+        href="#">Privacy</a>
+    </div>
+  </footer>
+  <!-- Tooltip sẽ xuất hiện ở đây -->
+  <!-- Scripts -->
   <script src="confetti.browser.min.js"></script>
-
   <script src="popup.js"></script>
 </body>
 
